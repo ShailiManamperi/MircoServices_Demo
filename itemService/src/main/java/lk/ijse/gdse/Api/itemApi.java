@@ -82,4 +82,7 @@ public class itemApi {
         return restTemplate.getForObject("http://localhost:8081/api/v1/user/save",String.class);
     }
 
+    public ResponseEntity updateUser(){
+        return new ResponseEntity<>(200,HttpStatus.OK);
+    }
 }
