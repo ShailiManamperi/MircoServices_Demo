@@ -1,10 +1,10 @@
 package lk.ijse.gdse.Service.impl;
 
-import lk.ijse.gdse.microservice.Dto.ItemDto;
-import lk.ijse.gdse.microservice.Entity.Item;
-import lk.ijse.gdse.microservice.Repo.ItemRepo;
-import lk.ijse.gdse.microservice.Service.ItemService;
-import lk.ijse.gdse.microservice.exception.*;
+import lk.ijse.gdse.Dto.ItemDto;
+import lk.ijse.gdse.Entity.Item;
+import lk.ijse.gdse.Repo.ItemRepo;
+import lk.ijse.gdse.Service.ItemService;
+import lk.ijse.gdse.exception.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

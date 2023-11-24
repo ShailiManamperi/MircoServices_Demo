@@ -1,7 +1,8 @@
 package lk.ijse.gdse.Service;
 
-import lk.ijse.gdse.microservice.Dto.ItemDto;
-import lk.ijse.gdse.microservice.exception.*;
+
+import lk.ijse.gdse.Dto.ItemDto;
+import lk.ijse.gdse.exception.*;
 
 import java.util.List;
 
