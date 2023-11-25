@@ -53,5 +53,31 @@ public class userApi {
         return "done the test";
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity updateItem(@PathVariable int id,
+                                     @RequestPart(value = "name") String name,
+                                     @RequestPart(value = "email") String email,
+                                     @RequestPart(value = "contact") String contact) {
+        try {
+            UserDto existingUser = service.searchUserById(id);
+
+            if (existingUser == null) {
+                return new ResponseEntity<>("Item not found with ID: " + id, HttpStatus.NOT_FOUND);
+            }
+
+            // Update the fields of the existing item with the values from the updatedItem
+            existingUser.setName(name);
+            existingUser.setContact(contact);
+            existingUser.setEmail(email);
+
+            // Save the updated item
+            service.updateUser(existingUser);
+
+            return new ResponseEntity<>(existingUser, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+    }
+
 
 }
