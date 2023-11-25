@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface UserService {
     UserDto searchUserByEmail(String email) throws UserNotFoundException;
+    UserDto searchUserById(int id) throws UserNotFoundException;
     void updateUser(UserDto email) throws UpdateFailException;
     int addUsers(UserDto email) throws CreateFailException;
     void deleteUser(String email) throws DeleteFailException;

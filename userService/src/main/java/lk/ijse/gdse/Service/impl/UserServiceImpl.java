@@ -26,6 +26,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto searchUserById(int id) throws UserNotFoundException {
+        User byId = userRepo.findById(id);
+        UserDto userDto = modelMapper.map(byId, UserDto.class);
+        return userDto;
+    }
+
+    @Override
     public void updateUser(UserDto userDto) throws UpdateFailException {
         User byEmail = userRepo.findByEmail(userDto.getEmail());
         if (byEmail != null){
