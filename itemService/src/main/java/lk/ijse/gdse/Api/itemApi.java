@@ -23,16 +23,18 @@ public class itemApi {
 
     @PostMapping(value = "/signup", consumes = "multipart/form-data")
     public ResponseEntity save(@RequestPart(value = "desc") String name,
-                               @RequestPart(value = "qty") int qty,
-                               @RequestPart(value = "price") double price) {
+                               @RequestPart(value = "qty") String qty,
+                               @RequestPart(value = "price") String price) {
 
         System.out.println(name);
         System.out.println(qty);
         try {
             ItemDto itemDto = new ItemDto();
             itemDto.setName(name);
-            itemDto.setQty(qty);
-            itemDto.setPrice(price);
+            int qty1 = Integer.parseInt(qty);
+            itemDto.setQty(qty1);
+            double price1 = Double.parseDouble(price);
+            itemDto.setPrice(price1);
 
             int i = service.addItem(itemDto);
             itemDto.setId(i);
