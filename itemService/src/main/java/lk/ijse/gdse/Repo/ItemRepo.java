@@ -8,4 +8,6 @@ public interface ItemRepo extends JpaRepository<Item,Integer> {
     Item findByName(String desc);
 
     Item findById(int id);
+
+
 }
