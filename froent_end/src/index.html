@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX with JQuery</title>
+<!--    <link  href="asstes/Bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+</head>
+<body>
+<section class="container-fluid p-4 bg-primary text-white">
+    <h1>Item Form</h1>
+</section>
+
+<section class="container mt-3">
+<!--    customer save from-->
+    <div class="row mt-3">
+        <div class="col-5">
+            <form id="itemform">
+                <div class="mb-3">
+                    <label for="itemID">Item Id</label>
+                    <input type="text" id="itemID" placeholder="Item Id" class="form-control" name="customerID">
+                </div>
+                <div class="mb-3">
+                    <label for="itemNAME">Item Name</label>
+                    <input type="text" id="itemNAME" placeholder="Item Name" class="form-control" name="customerName">
+                </div>
+                <div class="mb-3">
+                    <label for="itemPrice">Item Price</label>
+                    <input type="text" id="itemPrice" placeholder="Item Price" class="form-control" name="customerAddress">
+                </div>
+                <div class="mb-3">
+                    <label for="itemQty">Item Qty</label>
+                    <input type="text" id="itemQty" placeholder="Item Qty" class="form-control" name="customerSalary">
+                </div>
+                <div>
+                    <button id="btnsave" type="button" class="btn btn-primary">Save</button>
+                    <button id="btndelete" type="button" class="btn btn-danger">Delete</button>
+                    <button id="btnupdate" type="button" class="btn btn-warning">Update</button>
+                    <button id="btnAll" type="button" class="btn btn-info">Get All</button>
+
+                </div>
+            </form>
+        </div>
+        <div class="col">
+            <table class="table table-bordered table-hover">
+                <thead class="bg-info text-white">
+                <tr>
+                    <th>Item Id</th>
+                    <th>Item Name</th>
+                    <th>Item Price</th>
+                    <th>Item Qty</th>
+                </tr>
+                </thead>
+                <tbody id="tblitem1"></tbody>
+            </table>
+        </div>
+
+    </div>
+</section>
+
+
+<script src="asstes/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+<script>
+    loadAllItems();
+    function loadAllItems(){
+        $("#tblitem1").empty();
+        $.ajax({
+            url:"http://localhost:8082/api/v1/item/getAll",
+            method:"GET",
+            success:function (resp){
+                console.log(resp);
+                for (const item of resp){
+                    console.log(item)
+                    let row1 = `<tr><td>${item.id}</td><td>${item.name}</td><td>${item.price}</td><td>${item.qty}</td></tr>`;
+                    $("#tblitem1").append(row1);
+                }
+                bindClickEvent();
+            }
+        });
+    }
+
+    function bindClickEvent(){
+        $("#tblitem1>tr").click(function (){
+            let id = $(this).children().eq(0).text();
+            let name = $(this).children().eq(1).text();
+            let price = $(this).children().eq(2).text();
+            let qty = $(this).children().eq(3).text();
+            $("#itemID").val(id);
+            $("#itemNAME").val(name);
+            $("#itemPrice").val(price);
+            $("#itemQty").val(qty);
+        });
+    }
+
+    $("#btnAll").click(function (){
+        console.log("Started")
+        loadAllItems();
+        console.log("Ended");
+    });
+    $("#btnsave").click(function (){
+        var formData = new FormData();
+        formData.append("desc", $("#itemNAME").val());
+        formData.append("price", $("#itemPrice").val());
+        formData.append("qty", $("#itemQty").val());
+        console.log(formData);
+        console.log("Started")
+
+        $.ajax({
+            url:"http://localhost:8082/api/v1/item/signup",
+            method:"POST",
+            data:formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+               alert("Saved Sucessfully.");
+               loadAllItems();
+            },
+            error: function () {
+                console.log("Error occurred.");
+            }
+        });
+        console.log("Ended");
+    });
+
+
+    $("#btndelete").click(function (){
+        let itemname = $("#itemNAME").val();
+        console.log(itemname+"to delete")
+        console.log("Started")
+        $.ajax({
+            url:"http://localhost:8082/api/v1/item/"+encodeURIComponent(itemname),
+            method:"DELETE",
+            // data:data,
+            success: function () {
+                alert("Deleted That Item Sucessfully")
+                loadAllItems();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error deleting item:", status, error);
+                alert("Error deleting item. Please check the console for details.");
+            }
+        });
+        console.log("Ended");
+    });
+
+    $("#btnupdate").click(function (){
+        let itemid = $("#itemID").val();
+        var formData = new FormData();
+        formData.append("desc", $("#itemNAME").val());
+        formData.append("price", $("#itemPrice").val());
+        formData.append("qty", $("#itemQty").val());
+        console.log(formData);
+        console.log("update function")
+        $.ajax({
+            url:"http://localhost:8082/api/v1/item/Red Rice"+encodeURIComponent(itemid),
+            method:"PUT",
+            data:formData,
+            success:function (resp){
+                alert(resp);
+                loadAllItems();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error deleting item:", status, error);
+                alert("Error deleting item. Please check the console for details.");
+            }
+        });
+        console.log("Ended");
+    });
+
+
+
+</script>
+
+
+</body>
+</html>
