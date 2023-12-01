@@ -2,14 +2,18 @@ package lk.ijse.gdse.Api;
 
 
 import lk.ijse.gdse.Dto.ItemDto;
+import lk.ijse.gdse.Dto.UserDto;
 import lk.ijse.gdse.Entity.sec.ErrorRes;
 import lk.ijse.gdse.Service.ItemService;
 import lk.ijse.gdse.exception.CreateFailException;
+import lk.ijse.gdse.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -54,7 +58,7 @@ public class itemApi {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}",consumes = "multipart/form-data")
     public ResponseEntity updateItem(@PathVariable int id,
                                      @RequestPart(value = "desc") String name,
                                      @RequestPart(value = "qty") int qty,
@@ -86,5 +90,23 @@ public class itemApi {
 
     public ResponseEntity updateUser(){
         return new ResponseEntity<>(200,HttpStatus.OK);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity getAllCustomers(){
+        List<ItemDto> all;
+        try {
+            all = service.getAll();
+            System.out.println(all);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(all,HttpStatus.OK);
+    }
+
+    @PostMapping("/add")
+    public UserDto addUserFromItem(@RequestBody UserDto user){
+        user.setContact("0712330251");
+        return user;
     }
 }

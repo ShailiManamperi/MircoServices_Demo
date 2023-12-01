@@ -47,8 +47,8 @@ public class ItemServiceImpl implements ItemService {
     public int addItem(ItemDto itemDto) throws CreateFailException {
         Item byDesc = itemRepo.findByName(itemDto.getName());
         if ( byDesc == null){
-            itemRepo.save(modelMapper.map(itemDto,Item.class));
-            return byDesc.getId();
+            Item save = itemRepo.save(modelMapper.map(itemDto, Item.class));
+            return save.getId();
         }
         return byDesc.getId();
     }
@@ -64,7 +64,9 @@ public class ItemServiceImpl implements ItemService {
         List<Item> all = itemRepo.findAll();
         List<ItemDto> itemDtoList =new ArrayList<>();
         for (int i=0; i< all.size();i++){
-
+            Item item = all.get(i);
+            ItemDto itemDto = modelMapper.map(item, ItemDto.class);
+            itemDtoList.add(itemDto);
         }
         return itemDtoList;
     }
